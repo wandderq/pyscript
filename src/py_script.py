@@ -1,6 +1,7 @@
 import sys
 import os
 import re
+import shutil
 import pyscript.utils as utils
 import logging as lg
 
@@ -30,13 +31,15 @@ class PYScriptCore:
         run_parser.add_argument('script', type=str, help='Script name')
         
         list_parser = self.subparsers.add_parser('list', help='Show all available scripts')
+        
+        add_parser = self.subparsers.add_parser('add', help='Check and add new script to scripts list')
+        add_parser.add_argument('script_path', metavar='PATH', type=str, help='Path to script file')
     
     def get_scripts(self) -> list[PYScript]:
         scripts_path = os.path.expanduser(SCRIPTS_PATH)
         os.makedirs(scripts_path, exist_ok=True)
         sys.path.append(scripts_path)
         
-        class_pattern = re.compile(r'^class ([a-zA-Z0-9_]*)\(PYScript\):$')
         scripts = []
         
         for file_name in os.listdir(scripts_path):
@@ -46,26 +49,9 @@ class PYScriptCore:
                 logger.debug(f'Skipping non-file object in {SCRIPTS_PATH}')
                 continue
             
-            try:
-                with open(file_path, 'r', encoding=__encoding__) as file:
-                    for line in file:
-                        class_match = re.match(class_pattern, line.strip())
-                        if class_match:
-                            class_name = class_match.group(1)
-                            break
-                            
-                    if not class_match:
-                        raise InvalidScriptError('Can\'t find any script class with PYScript parent class')
-                
-                scriptlib = __import__(os.path.splitext(file_name)[0])
-                script: PYScript = getattr(scriptlib, class_name)()
-                
+            script = self.parse_script(file_path)
+            if script:
                 scripts.append(script)
-                
-            
-            except Exception as e:
-                logger.error(f'Error during script parsing: {e}. Cause: {e.__cause__}')
-                continue
         
         return scripts
     
@@ -87,6 +73,44 @@ class PYScriptCore:
         
         logger.error(f'Script not found: {script_command}')
     
+    def parse_script(self, script_path: str) -> PYScript | None:
+        class_pattern = re.compile(r'^class ([a-zA-Z0-9_]*)\((\w*\.)?PYScript\):$')
+        script: PYScript | None = None
+        
+        try:
+            with open(script_path, 'r', encoding=__encoding__) as file:
+                for line in file:
+                    class_match = re.match(class_pattern, line)
+                    if class_match:
+                        class_name = class_match.group(1)
+                        break
+                
+                if not class_match:
+                    raise InvalidScriptError('Can\'t find any script class with PYScript parent class')
+                
+                script_lib = __import__(os.path.splitext(os.path.basename(script_path))[0])
+                script = getattr(script_lib, class_name)()
+                
+                return script
+        
+        except Exception as e:
+            logger.error(f'Error during parsing {script_path}: {e}. Cause: {e.__cause__}')
+            return
+    
+    def move_script(self, script_path: str) -> None:
+        src = script_path
+        dest = os.path.join(
+            os.path.expanduser(SCRIPTS_PATH),
+            os.path.basename(script_path)
+        )
+        
+        utils.printf(f"Script file {src} will be moved to scripts dir: {dest}. Are you sure about that?")
+        if input('(y/n) > ').lower().strip() == 'y':
+            shutil.move(src, dest)
+            
+        else:
+            utils.printf('Abort')
+    
     def run(self) -> None | int:
         args = self.argparser.parse_args()
         
@@ -101,12 +125,23 @@ class PYScriptCore:
         if args.command == 'run':
             scripts = self.get_scripts()
             self.run_script(scripts, args.script)
+            return 0
         
         if args.command == 'list':
             scripts = self.get_scripts()
             self.print_scripts(scripts)
+            return 0
         
-        if not any([args.version, args.command]):
-            logger.warning('Nothing to do! See --help')
+        if args.command == 'add':
+            sys.path.append(os.path.dirname(args.script_path))
+            script = self.parse_script(args.script_path)
+            if script:
+                self.move_script(args.script_path)
+                return 0
+            
+            else:
+                return 1
+        
+        logger.warning('Nothing to do! See --help')
         
 def main(): return PYScriptCore().run()
