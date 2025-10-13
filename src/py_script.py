@@ -56,6 +56,10 @@ class PYScriptCore:
         return scripts
     
     def print_scripts(self, scripts: list[PYScript]) -> None:
+        if not scripts:
+            utils.printf(f'\033[31mNo scripts were found in the directory: {os.path.expanduser(SCRIPTS_PATH)}\033[0m')
+            return
+
         utils.printf('ID: \033[32mCommand\033[0m Description')
         utils.printf('-' * os.get_terminal_size().columns)
         for id, script in enumerate(scripts, start=1):
