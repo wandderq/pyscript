@@ -104,4 +104,7 @@ class PYScriptCore:
             scripts = self.get_scripts()
             self.print_scripts(scripts)
         
+        if not any([args.version, args.command]):
+            logger.warning('Nothing to do! See --help')
+        
 def main(): return PYScriptCore().run()
