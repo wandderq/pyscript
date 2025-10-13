@@ -1,2 +1,0 @@
-auto_mix_prep==0.2.0
-colorlog==6.9.0

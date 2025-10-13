@@ -74,6 +74,8 @@ class PYScriptCore:
         utils.printf('-' * os.get_terminal_size().columns)
         for id, script in enumerate(scripts, start=1):
             utils.printf(f'{id}: \033[32m{script.command}\033[0m {script.description}')
+        
+        utils.printf('')
     
     def run_script(self, scripts: list[PYScript], script_command: str) -> None | int:
         for script in scripts:
