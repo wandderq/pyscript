@@ -9,24 +9,9 @@ pyscript - это универсальный менеджер скриптов �
 
 
 ## Использование
-```
-usage: pyscript [-h] [-v] [-V]  ...
-
-Universal scripts launcher and manager
-
-positional arguments:
-  
-    run          Run PYScript script
-    list         Show all available scripts
-
-options:
-  -h, --help     show this help message and exit
-  -v, --verbose  Verbose mode (debug logs)
-  -V, --version  Get pyscript version and some other stuff
-```
-
 - `pyscript run script-name` - запускает скрипт по имени
 - `pyscript list` - показывает все доступные скрипты
+- `pyscript add /path/to/script` - перемещает ваш скрипт ко всем остальным
 - `pyscript -V` - показываект версию pyscript и путь к директории скриптов
 
 
