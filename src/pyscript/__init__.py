@@ -1,0 +1,7 @@
+from pyscript.script_class import PYScript
+
+__version__ = '0.1.0'
+__encoding__ = 'utf-8'
+
+
+__all__ = ['PYScript']

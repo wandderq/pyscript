@@ -1,0 +1,2 @@
+class InvalidScriptError(Exception):
+    pass

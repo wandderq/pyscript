@@ -1,0 +1,1 @@
+SCRIPTS_PATH = '~/.pyscripts/'

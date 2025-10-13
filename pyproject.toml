@@ -1,0 +1,49 @@
+[project]
+name = "pyscript"
+version = "0.1.0"
+description = "Universal scripts launcher and manager"
+readme = "README.md"
+authors = [
+    {name = "wandderq"},
+]
+license = {text = "MIT"}
+keywords = ["cli", "tools", "script", "python", "manager"]
+classifiers = [
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+]
+requires-python = ">=3.10"
+dependencies = [
+    "auto_mix_prep==0.2.0",
+    "colorlog==6.9.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=6.0",
+    "black",
+    "flake8",
+    "mypy",
+]
+test = [
+    "pytest>=6.0",
+    "pytest-cov",
+]
+
+[project.scripts]
+pyscript = "py_script:main"
+
+[build-system]
+requires = ["setuptools>=45", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[tool.black]
+line-length = 88
+target-version = ['py312']
+
+[tool.mypy]
+python_version = "3.10"
+warn_return_any = true
+warn_unused_configs = true
