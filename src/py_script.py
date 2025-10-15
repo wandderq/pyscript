@@ -20,11 +20,6 @@ class PYScriptCore:
             description='Universal scripts launcher and manager',
             epilog='See https://github.com/wandderq/pyscript (unavailable)'
         )
-        self.argparser.add_argument('-v', '--verbose', action='store_true', help='Verbose mode (debug logs)')
-        self.argparser.add_argument('-V', '--version', action='store_true', help='Get pyscript version and some other stuff')
-        
-        
-        # subparsers setup
         self.subparsers = self.argparser.add_subparsers(dest='command', metavar='')
         
         run_parser = self.subparsers.add_parser('run', help='Run PYScript script')
@@ -34,6 +29,9 @@ class PYScriptCore:
         
         add_parser = self.subparsers.add_parser('add', help='Check and add new script to scripts list')
         add_parser.add_argument('script_path', metavar='PATH', type=str, help='Path to script file')
+        
+        self.argparser.add_argument('-v', '--verbose', action='store_true', help='Verbose mode (debug logs)')
+        self.argparser.add_argument('-V', '--version', action='store_true', help='Get pyscript version and some other stuff')
     
     def get_scripts(self) -> list[PYScript]:
         scripts_path = os.path.expanduser(SCRIPTS_PATH)
