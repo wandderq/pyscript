@@ -1,6 +1,6 @@
 [project]
 name = "pyscript"
-version = "0.3.0"
+version = "0.3.1"
 description = "Universal scripts launcher and manager"
 readme = "README.md"
 authors = [

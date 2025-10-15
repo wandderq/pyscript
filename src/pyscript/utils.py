@@ -29,43 +29,8 @@ def setup_logger(name: str) -> lg.Logger:
     stream_handler.setFormatter(stream_formatter)
     logger.addHandler(stream_handler)
     
-    
     return logger
 
-# def setup_logger(name: str) -> lg.Logger:
-#     """Setups logger and returns it"""
-#     logger = lg.getLogger(name)
-#     logger.setLevel(lg.DEBUG)
-    
-#     stream_handler = lg.StreamHandler(stream=sys.stdout)
-#     stream_formatter = clg.ColoredFormatter(
-#         fmt="{log_color}[{name} - {levelname}]: {message}{reset}",
-#         style='{',
-#         log_colors={
-#             'debug': 'white',
-#             'info': 'green',
-#             'warning': 'yellow',
-#             'error': 'red',
-#             'critical': 'red',
-            
-#         }
-#     )
-#     stream_handler.setFormatter(stream_formatter)
-#     logger.addHandler(stream_handler)
-    
-#     return logger
-    # filename = os.path.join(.EXEC_DIR, f'logs/{}.log')
-    # os.makedirs(os.path.dirname(filename), exist_ok=True)
-    
-    # file_handler = lg.FileHandler(filename=filename, mode='a')
-    # file_formatter = lg.Formatter(
-    #     "[{name} - {levelname} at {asctime}]: {message}",
-    #     style='{',
-    #     datefmt="%H:%M:%S"
-    # )
-    # file_handler.setFormatter(file_formatter)
-    
-    # logger.addHandler(file_handler)
 
 def printf(text: str) -> None:
     sys.stdout.write(text + '\n')
